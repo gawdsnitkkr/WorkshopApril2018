@@ -4,8 +4,10 @@ import webbrowser as wb
 from time import gmtime, strftime
 
 
-# Plugin Based Archietecture
+# Plugin Based Architecture
 class Reply:
+    # text can be a text generating function or a string
+    # action can be None or a function to perform action
     def __init__(self, text, action):
         self.__text = text
         self.__action = action
