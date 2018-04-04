@@ -41,8 +41,19 @@ try:
                 text = text.lower()
 
                 # Fetch Reply
-                reply = response[text] if text in response else response['invalid']
+                reply = None
+                if text in response:
+                    reply = response[text]
+                else:
+                    tokens = text.split()
+                    if len(tokens) > 0 and tokens[0] in response:
+                        reply = response[tokens[0]]
+                        text = text[len(tokens[0]) + 1:]
+                    else:
+                        reply = response['invalid']
+
                 reply.action(text)  # Perform Action
+
                 output = reply.getReply(text)  # Generate Reply
                 print(output)  # Print Reply
                 engine.say(output)  # TTS

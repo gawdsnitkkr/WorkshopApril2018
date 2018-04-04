@@ -1,5 +1,6 @@
 # For Features
 import os
+import urllib
 import webbrowser as wb
 from time import gmtime, strftime
 
@@ -39,9 +40,24 @@ def quit(text):
     os._exit(0)
 
 
+def search(text):
+    query = text
+    url = 'https://www.google.co.in/search?q=' + urllib.parse.quote_plus(query)
+    wb.open(url, new=2)
+
+
+def define(text):
+    query = 'define ' + text
+    search(query)
+
+
 response['invalid'] = Reply('Sorry, I don\'t understand that yet!', None)
 response['hello'] = Reply('Oh Hello There!', None)
 response['browser'] = Reply('Opening google.com', browser)
 response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
+
+# Features to read info after a command word
+response['define'] = Reply('', define)
+response['search'] = Reply('', search)
