@@ -1,16 +1,16 @@
-import speech_recognition as sr # for speech to text
-from gtts import gTTS # for text to speech
-
-import subprocess as sbp # required for play audio
-import pyttsx3
-import webbrowser as wb
 import os
+import subprocess as sbp  # required for play audio
+import webbrowser as wb
 
-# engine = pyttsx3.init()
-# rate = engine.getProperty('rate')
-# engine.setProperty('rate', 120)
+import pyttsx3
+import speech_recognition as sr  # for speech to text
+from gtts import gTTS  # for text to speech
 
-mic_name = "HDA Intel PCH: ALC3234 Analog (hw:0,0)" # microphon hardware id
+engine = pyttsx3.init()
+rate = engine.getProperty('rate')
+engine.setProperty('rate', 120)
+
+mic_name = 'Microphone (Realtek High Defini'  # microphon hardware id
 sample_rate = 48000     # often values are recorded
 chunk_size = 2048       # buffer size
 r = sr.Recognizer()     # init recognizer
@@ -23,7 +23,7 @@ for i, microphone_name in enumerate(mic_list):
         device_id = i # set the mic id which I want to use
 
 questions = ['how are you' , "hello" , "browser" , "screen"]
-answer = ['I am fine sir, thank you' , "hello Sir,I am your Laptop,How can I help you,sir" , "opening sir" , "ok Sir"]
+answer = ['I am fine sir, thank you', "hello Sir, I am your Laptop, How can I help you, sir", "Opening Sir", "Ok Sir"]
 
 def start():
     with sr.Microphone(device_index=device_id, sample_rate=sample_rate,chunk_size=chunk_size) as source:
@@ -46,13 +46,18 @@ def start():
             if index==3: # if screenshot
                 os.system("import -window root screen.png")
 
-            # engine.say(reply)
-            # engine.runAndWait()
+            engine.say(reply)
+            engine.runAndWait()
             myobj = gTTS(text=reply, lang=language, slow=False)
             myobj.save("nk.amr")
             sbp.call(["ffplay", "-nodisp", "-autoexit", "nk.amr"])
-        except sr.UnknownValueError:
+        except sr.UnknownValueError as e:
             print("Google Speech Recognition could not understand audio")
         except sr.RequestError as e:
             print("Could not request results from Google  Speech Recognition service; {0}".format(e))
-start()
+        except Exception as e:
+            print(e)
+
+
+while True:
+    start()
