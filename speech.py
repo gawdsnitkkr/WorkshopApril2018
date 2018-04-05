@@ -57,6 +57,12 @@ def shutdown(text):
     else: # linux
         os.system("poweroff")
 
+def music(text):
+    if os.name == 'nt': # for windows
+        # os.system("wmplayer") # not tested yet 
+        os.system("vlc")# for windows working
+    else: # linux
+        os.system("rhythmbox")
 
 def openExplorer(text):
     subprocess.call('explorer')
@@ -69,6 +75,7 @@ response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
 response['shutdown'] = Reply("Shutting down...",shutdown)
+response['play music'] = Reply("Playing your music!!", music)
 
 # Features to read info after a command word
 response['define'] = Reply('', define)
