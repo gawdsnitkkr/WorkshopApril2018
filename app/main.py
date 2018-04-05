@@ -1,17 +1,20 @@
 import pyttsx3 as tts  # For Text to Speech
 import speech_recognition as stt  # For Speech to Text
 
-from speech import response  # For Features
+from app.speech import response  # For Features
+
+from config import tts_config
+from config import stt_config
 
 # Initialize Text To Speech(TTS)
 engine = tts.init()
-engine.setProperty('rate', 120)
+engine.setProperty('rate', tts_config['rate'])
 
-# Initialize Speech To Text(SST)
-sample_rate = 48000
-chunk_size = 2048  # buffer size
+# Initialize Speech To Text(STT)
+sample_rate = stt_config['sample_rate']
+chunk_size = stt_config['chunk_size']  # buffer size
 recognizer = stt.Recognizer()  # init recognizer
-language = 'en'  # for text to speech language
+language = stt_config['language']  # for text to speech language
 device_id = 0  # first device (microphone)
 
 # Get Microphone Device ID
