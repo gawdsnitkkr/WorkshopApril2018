@@ -1,9 +1,13 @@
 # WorkshopApril2018
 
-## Installing Dependency Libraries
+## Setup
+
+* Install common modules
 ```bash
-pip install pyttsx3
-pip install pyaudio
-pip install pypiwin32
-pip install SpeechRecognition
+pip install -r requirements.txt
+```
+
+* If using Windows, then also run:
+```bash
+pip install -r windows_requirements.txt
 ```
