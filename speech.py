@@ -3,6 +3,7 @@ import os
 import urllib
 import webbrowser as wb
 import subprocess
+import ctypes
 from time import gmtime, strftime
 
 
@@ -61,6 +62,12 @@ def shutdown(text):
 def openExplorer(text):
     subprocess.call('explorer')
 
+def lock(text):
+    if os.name == 'nt':
+        ctypes.windll.user32.LockWorkStation()
+    else:
+        os.popen('gnome-screensaver-command --lock')
+
 
 response['invalid'] = Reply('Sorry, I don\'t understand that yet!', None)
 response['hello'] = Reply('Oh Hello There!', None)
@@ -69,6 +76,7 @@ response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
 response['shutdown'] = Reply("Shutting down...",shutdown)
+response['lock'] = Reply("Locking your computer", lock)
 
 # Features to read info after a command word
 response['define'] = Reply('', define)
