@@ -50,6 +50,13 @@ def define(text):
     query = 'define ' + text
     search(query)
 
+def shutdown(text):
+    if os.name == 'nt': # for windows
+        os.system("shutdown -s")
+    else: # linux
+        os.system("poweroff")
+            
+    
 
 response['invalid'] = Reply('Sorry, I don\'t understand that yet!', None)
 response['hello'] = Reply('Oh Hello There!', None)
@@ -57,6 +64,7 @@ response['browser'] = Reply('Opening google.com', browser)
 response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
+response['shutdown'] = Reply("Shutting down...",shutdown)
 
 # Features to read info after a command word
 response['define'] = Reply('', define)
