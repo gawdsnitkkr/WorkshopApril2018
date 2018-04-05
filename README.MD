@@ -17,11 +17,24 @@ pip install -r windows_requirements.txt
 ```
 $ sudo apt-get install python3 python3-pip virtualenvwrapper
 ```
-### Creating Virtual Enviornment
+### Creating and activating Virtual Enviornment
     * move to the project directory *
 
 ```
 $ virtualenv -p /usr/bin/python3 env
-$ source env/bin/activate
+```
+* for linux *
+```
+$ source env/bin/activate 
+```
+* for winndows *
+```
+$ source env/Scripts/activate
+```
+```
 $ pip install requirements.txt
+```
+### Deactivating Virtual Enviornment
+```
+$ deactivate
 ```
