@@ -2,6 +2,7 @@
 import os
 import urllib
 import webbrowser as wb
+import subprocess
 from time import gmtime, strftime
 
 
@@ -55,8 +56,11 @@ def shutdown(text):
         os.system("shutdown -s")
     else: # linux
         os.system("poweroff")
-            
-    
+
+
+def openExplorer(text):
+    subprocess.call('explorer')
+
 
 response['invalid'] = Reply('Sorry, I don\'t understand that yet!', None)
 response['hello'] = Reply('Oh Hello There!', None)
@@ -69,3 +73,7 @@ response['shutdown'] = Reply("Shutting down...",shutdown)
 # Features to read info after a command word
 response['define'] = Reply('', define)
 response['search'] = Reply('', search)
+response['open my computer'] = Reply('', openExplorer)
+response['open this p c'] = Reply('', openExplorer)
+response['open this pc'] = Reply('', openExplorer)
+response['open explorer'] = Reply('', openExplorer)
