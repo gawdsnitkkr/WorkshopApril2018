@@ -23,11 +23,11 @@ $ sudo apt-get install python3 python3-pip virtualenvwrapper
 ```
 $ virtualenv -p /usr/bin/python3 env
 ```
-* for linux *
+* for linux 
 ```
 $ source env/bin/activate 
 ```
-* for winndows *
+* for windows 
 ```
 $ source env/Scripts/activate
 ```
