@@ -58,6 +58,12 @@ def shutdown(text):
     else: # linux
         os.system("poweroff")
 
+def music(text):
+    if os.name == 'nt': # for windows
+        os.system("vlc")
+        # os.system("wmplayer")
+    else: # linux
+        os.system("rhythmbox")
 
 def openExplorer(text):
     subprocess.call('explorer')
@@ -75,7 +81,8 @@ response['browser'] = Reply('Opening google.com', browser)
 response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
-response['shutdown'] = Reply("Shutting down...",shutdown)
+response['shutdown'] = Reply("Shutting down...", shutdown)
+response['play music'] = Reply("Opening music player...", music)
 response['lock'] = Reply("Locking your computer", lock)
 
 # Features to read info after a command word
