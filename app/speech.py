@@ -3,8 +3,11 @@ import os
 import urllib
 import webbrowser as wb
 import subprocess
+import ctypes
 from time import gmtime, strftime
-
+import pyautogui
+import uuid
+import requests
 
 # Plugin Based Architecture
 class Reply:
@@ -58,10 +61,34 @@ def shutdown(text):
     else:  # linux
         os.system("poweroff")
 
+def music(text):
+    if os.name == 'nt': # for windows
+        os.system("vlc")
+        # os.system("wmplayer")
+    else: # linux
+        os.system("rhythmbox")
 
 def openExplorer(text):
     subprocess.call('explorer')
 
+def lock(text):
+    if os.name == 'nt':
+        ctypes.windll.user32.LockWorkStation()
+    else:
+        os.popen('gnome-screensaver-command --lock')
+
+def screenshot(text):
+    x=uuid.uuid4()
+    pyautogui.screenshot('/download/img'+str(x)+'.png')
+
+def weather(text):
+    city_id = 2172797
+    req = requests.get('http://samples.openweathermap.org/data/2.5/weather?id='+str(city_id)+'&appid=8a525710a52517509ce8c40c4c42b04a')
+    json_object = req.json()
+    temp_k = float(json_object['main']['temp'])
+    temp = (temp_k - 273.15) * 1.8 + 32
+    s = 'The temperature is '+str(temp)+' Farenheit'
+    return s
 
 response['invalid'] = Reply('Sorry, I don\'t understand that yet!', None)
 response['hello'] = Reply('Oh Hello There!', None)
@@ -70,6 +97,10 @@ response['what is the time'] = Reply(time, None)
 response['what is the date'] = Reply(date, None)
 response['quit'] = Reply('BBye!', quit)
 response['shutdown'] = Reply("Shutting down...", shutdown)
+response['play music'] = Reply("Opening music player...", music)
+response['lock'] = Reply("Locking your computer", lock)
+response['screenshot'] = Reply('Taking screenshot',screenshot)
+response['weather'] = Reply(weather,None)
 
 # Features to read info after a command word
 response['define'] = Reply('', define)
