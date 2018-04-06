@@ -1,3 +1,7 @@
+import logging
+logging.basicConfig(filename='logger.log', level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(name)s:%(message)s' )
+
 import pyttsx3 as tts  # For Text to Speech
 import speech_recognition as stt  # For Speech to Text
 
@@ -29,21 +33,22 @@ def start_app():
     try:
         device_id = int(input('Microphone ID: '))
     except Exception as e:
-        print('Invalid Driver ID, using 0')
+        logging.info('Invalid Driver ID, using 0')
     finally:
         device_id = 0 if device_id < 0 or device_id >= len(mic_list) else device_id
 
     try:
         with stt.Microphone(device_index=device_id, sample_rate=sample_rate, chunk_size=chunk_size) as source:
             recognizer.adjust_for_ambient_noise(source)  # removing noise
-            print("Ready.")
+            logging.info("Ready.")
 
             while True:  # STT Loop
                 audio = recognizer.listen(source)  # listen from mic
 
                 try:
                     text = recognizer.recognize_google(audio)  # recognize with google
-                    print("You said:", text, sep=" ")
+                    logging.info("You said:")
+                    logging.info(text)
                     text = text.lower()
 
                     # Fetch Reply
@@ -61,16 +66,17 @@ def start_app():
                     reply.action(text)  # Perform Action
 
                     output = reply.getReply(text)  # Generate Reply
-                    print(output)  # Print Reply
+                    logging.info(output) #logging Reply
                     engine.say(output)  # TTS
                     engine.runAndWait()  # Wait for Speech To Complete
 
                 except stt.UnknownValueError as e:
-                    print("Google Speech Recognition could not understand audio")
+                    logging.info("Google Speech Recognition could not understand audio")
                 except stt.RequestError as e:
-                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                    logging.info("Could not request results from Google Speech Recognition service; {0}".format(e))
                 except Exception as e:
-                    print(e)
+                   logging.info(e)
 
     except Exception as e:
-        print('Exception Occurred', e)
+        logging.info("Exception Occurred")
+        logging.info(e)
