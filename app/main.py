@@ -6,68 +6,71 @@ from app.speech import response  # For Features
 from config import tts_config
 from config import stt_config
 
-# Initialize Text To Speech(TTS)
-engine = tts.init()
-engine.setProperty('rate', tts_config['rate'])
 
-# Initialize Speech To Text(STT)
-sample_rate = stt_config['sample_rate']
-chunk_size = stt_config['chunk_size']  # buffer size
-recognizer = stt.Recognizer()  # init recognizer
-language = stt_config['language']  # for text to speech language
-device_id = 0  # first device (microphone)
+def start_app():
 
-# Get Microphone Device ID
-print('Available Audio Devices: ')
-mic_list = stt.Microphone.list_microphone_names()
-for i, micName in enumerate(mic_list):
-    print(i, micName)
+    # Initialize Text To Speech(TTS)
+    engine = tts.init()
+    engine.setProperty('rate', tts_config['rate'])
 
-try:
-    device_id = int(input('Microphone ID: '))
-except Exception as e:
-    print('Invalid Driver ID, using 0')
-finally:
-    device_id = 0 if device_id < 0 or device_id >= len(mic_list) else device_id
+    # Initialize Speech To Text(STT)
+    sample_rate = stt_config['sample_rate']
+    chunk_size = stt_config['chunk_size']  # buffer size
+    recognizer = stt.Recognizer()  # init recognizer
+    language = stt_config['language']  # for text to speech language
+    device_id = 0  # first device (microphone)
 
-try:
-    with stt.Microphone(device_index=device_id, sample_rate=sample_rate, chunk_size=chunk_size) as source:
-        recognizer.adjust_for_ambient_noise(source)  # removing noise
-        print("Ready.")
+    # Get Microphone Device ID
+    print('Available Audio Devices: ')
+    mic_list = stt.Microphone.list_microphone_names()
+    for i, micName in enumerate(mic_list):
+        print(i, micName)
 
-        while True:  # STT Loop
-            audio = recognizer.listen(source)  # listen from mic
+    try:
+        device_id = int(input('Microphone ID: '))
+    except Exception as e:
+        print('Invalid Driver ID, using 0')
+    finally:
+        device_id = 0 if device_id < 0 or device_id >= len(mic_list) else device_id
 
-            try:
-                text = recognizer.recognize_google(audio)  # recognize with google
-                print("You said:", text, sep=" ")
-                text = text.lower()
+    try:
+        with stt.Microphone(device_index=device_id, sample_rate=sample_rate, chunk_size=chunk_size) as source:
+            recognizer.adjust_for_ambient_noise(source)  # removing noise
+            print("Ready.")
 
-                # Fetch Reply
-                reply = None
-                if text in response:
-                    reply = response[text]
-                else:
-                    tokens = text.split()
-                    if len(tokens) > 0 and tokens[0] in response:
-                        reply = response[tokens[0]]
-                        text = text[len(tokens[0]) + 1:]
+            while True:  # STT Loop
+                audio = recognizer.listen(source)  # listen from mic
+
+                try:
+                    text = recognizer.recognize_google(audio)  # recognize with google
+                    print("You said:", text, sep=" ")
+                    text = text.lower()
+
+                    # Fetch Reply
+                    reply = None
+                    if text in response:
+                        reply = response[text]
                     else:
-                        reply = response['invalid']
+                        tokens = text.split()
+                        if len(tokens) > 0 and tokens[0] in response:
+                            reply = response[tokens[0]]
+                            text = text[len(tokens[0]) + 1:]
+                        else:
+                            reply = response['invalid']
 
-                reply.action(text)  # Perform Action
+                    reply.action(text)  # Perform Action
 
-                output = reply.getReply(text)  # Generate Reply
-                print(output)  # Print Reply
-                engine.say(output)  # TTS
-                engine.runAndWait()  # Wait for Speech To Complete
+                    output = reply.getReply(text)  # Generate Reply
+                    print(output)  # Print Reply
+                    engine.say(output)  # TTS
+                    engine.runAndWait()  # Wait for Speech To Complete
 
-            except stt.UnknownValueError as e:
-                print("Google Speech Recognition could not understand audio")
-            except stt.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
-            except Exception as e:
-                print(e)
+                except stt.UnknownValueError as e:
+                    print("Google Speech Recognition could not understand audio")
+                except stt.RequestError as e:
+                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                except Exception as e:
+                    print(e)
 
-except Exception as e:
-    print('Exception Occurred', e)
+    except Exception as e:
+        print('Exception Occurred', e)
