@@ -7,8 +7,8 @@ import speech_recognition as stt  # For Speech to Text
 
 from app.speech import response  # For Features
 
-from config import tts_config
-from config import stt_config
+from app.config import tts_config
+from app.config import stt_config
 
 
 def start_app():
